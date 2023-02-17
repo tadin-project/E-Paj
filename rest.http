@@ -1,0 +1,65 @@
+# ========== begin::API GROUP ==========
+### mengambil semua data group
+GET http://localhost:5000/api/groups
+
+### menambah data group
+POST http://localhost:5000/api/groups
+Content-Type: application/json
+
+{
+    "group_kode" : "xx",
+    "group_nama" : "Tes",
+    "group_status" : false
+}
+
+### mengambil data group by id
+GET http://localhost:5000/api/groups/3
+
+### mengupdate data group
+PATCH http://localhost:5000/api/groups/3
+Content-Type: application/json
+
+{
+    "group_kode" : "xx1",
+    "group_nama" : "Tes 2x"
+}
+
+### hapus data group
+DELETE http://localhost:5000/api/groups/3
+
+# =========== end::API GROUP ===========
+
+# ========== begin::API USER ==========
+### mengambil semua data group
+GET http://localhost:5000/api/users
+
+### menambah data group
+POST http://localhost:5000/api/users
+Content-Type: application/json
+
+{
+    "user_nama" : "tes2",
+    "user_email" : "tes2@gmail.com",
+    "user_status" : false,
+    "user_pass" : "tes123",
+    "group_id" : 2
+}
+
+### mengambil data group by id
+GET http://localhost:5000/api/users/10
+
+### mengupdate data group
+PATCH http://localhost:5000/api/users/5
+Content-Type: application/json
+
+{
+    "user_nama" : "tes2",
+    "user_email" : "tes2@gmail.com",
+    "is_ganti_pass" : true,
+    "user_pass" : "tes2"
+}
+
+### hapus data group
+DELETE http://localhost:5000/api/users/10
+
+# =========== end::API USER ===========

@@ -1,0 +1,9 @@
+# environment variabel
+.env
+
+# NPM
+node_modules
+
+# logs
+logs
+*.log
