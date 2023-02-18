@@ -11,25 +11,25 @@ import $ from "jquery/dist/jquery";
 
 import { AdminT } from "../templates/templates";
 
-const UserPage = () => {
-  const titlePage = "Master User";
+const GroupPage = () => {
+  const titlePage = "Master Group";
 
   return (
     <AdminT title={titlePage}>
       <h1 className="mt-4" id="titlePage">
-        Master User
+        Master Group
       </h1>
       <ol className="breadcrumb mb-4">
-        <li className="breadcrumb-item active">Master User</li>
+        <li className="breadcrumb-item active">Master Group</li>
       </ol>
       <div className="card mb-4">
         <div className="card-header">
-          <i className="fa fa-user"></i> Form User
+          <i className="fa fa-user"></i> Form Group
         </div>
         <div className="card-body">
           <form id="formVendor">
             <div className="form-group row">
-              <label className="control-label col-sm-3">Username</label>
+              <label className="control-label col-sm-3">Nama Grup</label>
               <div className="col-sm-6">
                 <input
                   type="text"
@@ -55,7 +55,7 @@ const UserPage = () => {
       </div>
       <div className="card mb-4">
         <div className="card-header">
-          <i className="fa fa-user"></i> Data User
+          <i className="fa fa-user"></i> Data Grup
         </div>
         <div className="card-body">
           <table
@@ -87,4 +87,4 @@ const UserPage = () => {
   );
 };
 
-export default UserPage;
+export default GroupPage;

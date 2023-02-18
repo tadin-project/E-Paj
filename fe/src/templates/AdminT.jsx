@@ -1,10 +1,30 @@
-import React from "react";
+import React, { useEffect } from "react";
+import $ from "jquery/dist/jquery";
+
 import { Footer, Sidebar } from "../components/components";
 
-const AdminT = ({ children }) => {
+const AdminT = ({ title = "", children }) => {
+  const fnShowSidebar = () => {
+    if ($("#mainWrapper").hasClass("sb-sidenav-toggled")) {
+      $("#mainWrapper").removeClass("sb-sidenav-toggled");
+    } else {
+      $("#mainWrapper").addClass("sb-sidenav-toggled");
+    }
+  };
+
+  useEffect(() => {
+    let __judulWeb = "EPaj";
+
+    if (title) {
+      __judulWeb += " | " + title;
+    }
+
+    document.title = __judulWeb;
+  });
+
   return (
     <div>
-      <div className="sb-nav-fixed">
+      <div className="sb-nav-fixed" id="mainWrapper">
         <nav className="sb-topnav navbar navbar-expand navbar-dark bg-dark">
           {/* Navbar Brand */}
           <a className="navbar-brand ps-3" href="index.html">
@@ -14,7 +34,7 @@ const AdminT = ({ children }) => {
           <button
             className="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0"
             id="sidebarToggle"
-            href="#!"
+            onClick={fnShowSidebar}
           >
             <i className="fas fa-bars"></i>
           </button>
