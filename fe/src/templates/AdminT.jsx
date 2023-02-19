@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import $ from "jquery/dist/jquery";
+import $ from "jquery";
 
 import { Footer, Sidebar } from "../components/components";
 
