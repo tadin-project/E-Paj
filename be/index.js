@@ -19,8 +19,8 @@ const main = async () => {
 
   // middlewares
   app.use(logger);
-  // app.use(cors(corsOptions));
-  app.use(cors());
+  app.use(cors(corsOptions));
+  // app.use(cors());
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
   app.use(cookieParser());

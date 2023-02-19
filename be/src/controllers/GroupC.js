@@ -1,10 +1,29 @@
 const asyncHandler = require("express-async-handler");
+const { Op } = require("sequelize");
 
 const { Group } = require("../models/models");
 
 const getAllGroup = asyncHandler(async (req, res) => {
   try {
-    const data = await Group.findAll();
+    const data = await Group.findAll({
+      attributes: [
+        ["group_id", "id"],
+        ["group_kode", "kode"],
+        ["group_nama", "nama"],
+        ["group_status", "status"],
+      ],
+    });
+    // r = [];
+    // if (data.length > 0) {
+    //   data.forEach((e) => {
+    //     r.push({
+    //       id: e.group_id,
+    //       kode: e.group_kode,
+    //       nama: e.group_nama,
+    //       status: e.group_status,
+    //     });
+    //   });
+    // }
     res.json({ payload: data });
   } catch (error) {
     res.status(500).json(error);
@@ -13,33 +32,54 @@ const getAllGroup = asyncHandler(async (req, res) => {
 
 const createGroup = asyncHandler(async (req, res) => {
   try {
-    const { group_nama, group_kode, group_status } = req.body;
+    const { nama, kode, status } = req.body;
 
-    if (!group_nama || !group_kode || (!group_status && group_status != 0)) {
-      let message = "";
-      if (!group_nama) {
+    let message = "";
+    if (!nama || !kode || (!status && status != 0)) {
+      if (!nama) {
         message += "Nama grup tidak boleh kosong!\n";
       }
 
-      if (!group_kode) {
+      if (!kode) {
         message += "Kode grup tidak boleh kosong!\n";
       }
 
-      if (!group_status) {
+      if (!status) {
         message += "Status grup tidak boleh kosong!\n";
       }
+    }
 
+    const cekKodeGrup = await Group.findAll({
+      where: {
+        group_kode: kode,
+      },
+    });
+
+    if (cekKodeGrup.length > 0) {
+      message += "Kode grup harus unik!";
+    }
+
+    if (message != "") {
       res.status(400).json({ message: message });
       return;
     }
 
     const data = await Group.create({
-      group_nama,
-      group_kode,
-      group_status,
+      group_nama: nama,
+      group_kode: kode,
+      group_status: status == "true" ? true : false,
     });
 
-    res.status(201).json({ payload: data });
+    res.status(201).json({
+      payload: {
+        id: data.group_id,
+        kode: data.group_kode,
+        nama: data.group_nama,
+        status: data.group_status,
+        createdAt: data.createdAt,
+        updatedAt: data.updatedAt,
+      },
+    });
   } catch (error) {
     res.status(500).json(error);
   }
@@ -70,28 +110,45 @@ const getGroupById = asyncHandler(async (req, res) => {
 const updateGroup = asyncHandler(async (req, res) => {
   try {
     const group_id = req.params.groupId;
-    let group = await Group.findOne({ where: { group_id } });
+    const oldGroup = await Group.findOne({ where: { group_id } });
 
-    if (!group) {
+    if (!oldGroup) {
       res.status(400).json({
         message: "Grup tidak ditemukan!",
       });
       return;
     }
 
-    const { group_nama, group_kode, group_status } = req.body;
+    const { nama, kode, status } = req.body;
 
     let message = "";
-    if (group_nama && group_nama.trim() == "") {
+    if (nama && nama.trim() == "") {
       message += "Nama grup tidak boleh kosong!\n";
     }
 
-    if (group_kode && group_kode.trim() == "") {
+    if (kode && kode.trim() == "") {
       message += "Kode grup tidak boleh kosong!\n";
     }
 
-    if (group_status && group_status.trim() == "") {
+    if (status && status.trim() == "") {
       message += "Status grup tidak boleh kosong!\n";
+    }
+
+    const cekKode = await Group.findAll({
+      where: {
+        [Op.and]: [
+          { group_kode: kode },
+          {
+            group_kode: {
+              [Op.ne]: oldGroup.group_kode,
+            },
+          },
+        ],
+      },
+    });
+
+    if (cekKode.length > 0) {
+      message += "Kode grup harus unik!";
     }
 
     if (message != "") {
@@ -100,21 +157,21 @@ const updateGroup = asyncHandler(async (req, res) => {
     }
 
     let newGroup = {
-      group_nama: group.group_nama,
-      group_kode: group.group_kode,
-      group_status: group.group_status,
+      group_nama: oldGroup.group_nama,
+      group_kode: oldGroup.group_kode,
+      group_status: oldGroup.group_status,
     };
 
-    if (group_nama) {
-      newGroup.group_nama = group_nama;
+    if (nama) {
+      newGroup.group_nama = nama;
     }
 
-    if (group_kode) {
-      newGroup.group_kode = group_kode;
+    if (kode) {
+      newGroup.group_kode = kode;
     }
 
-    if (group_status || group_status == 0 || group_status == false) {
-      newGroup.group_status = group_status;
+    if (status) {
+      newGroup.group_status = status == "true" ? true : false;
     }
 
     const data = await Group.update(newGroup, {
